@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
 import Badge from '@/components/ui/Badge';
 import BackButton from '@/components/ui/BackButton';
-import { getWritingBySlug, mockWritings } from '@/lib/mockData';
 import { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
+import { getImageUrl } from '@/lib/utils';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -10,7 +11,13 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const writing = getWritingBySlug(slug);
+  const supabase = await createClient();
+  const { data: writing } = await supabase
+    .from('writings')
+    .select('title')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single();
   
   if (!writing) {
     return { title: 'Not Found' };
@@ -22,24 +29,41 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  return mockWritings
-    .filter((w) => w.status === 'published')
-    .map((w) => ({
-      slug: w.slug,
-    }));
+  const { createClient } = await import('@supabase/supabase-js');
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+  
+  const { data: writings } = await supabaseAdmin
+    .from('writings')
+    .select('slug')
+    .eq('status', 'published');
+
+  return (writings || []).map((w) => ({
+    slug: w.slug,
+  }));
 }
 
 export default async function WritingPage({ params }: Props) {
   const { slug } = await params;
-  const writing = getWritingBySlug(slug);
+  
+  const supabase = await createClient();
+  const { data: writing } = await supabase
+    .from('writings')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single();
 
-  if (!writing || writing.status !== 'published') {
+  if (!writing) {
     notFound();
   }
 
   const isPoetry = writing.category === 'poem';
   // Check if text contains Devanagari characters
-  const isHindi = /[\u0900-\u097F]/.test(writing.content);
+  const isHindi = /[\u0900-\u097F]/.test(writing.content || '');
+  const coverImageUrl = getImageUrl(writing.cover_image);
 
   return (
     <article className="max-w-3xl mx-auto px-6 py-16 w-full flex-1">
@@ -60,10 +84,10 @@ export default async function WritingPage({ params }: Props) {
         </time>
       </header>
 
-      {writing.cover_image && (
+      {coverImageUrl && (
         <div className="mb-12">
           <img 
-            src={writing.cover_image} 
+            src={coverImageUrl} 
             alt={writing.title} 
             className="w-full h-[400px] object-cover rounded-lg shadow-sm" 
           />

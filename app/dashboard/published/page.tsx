@@ -1,10 +1,16 @@
 import Link from 'next/link';
-import { getPublishedWritings } from '@/lib/mockData';
 import EmptyState from '@/components/ui/EmptyState';
 import Badge from '@/components/ui/Badge';
+import { createClient } from '@/lib/supabase/server';
+import { UnpublishButton } from '@/components/ui/DashboardActionButtons';
 
-export default function PublishedPage() {
-  const published = getPublishedWritings();
+export default async function PublishedPage() {
+  const supabase = await createClient();
+  const { data: published } = await supabase
+    .from('writings')
+    .select('id, title, category, published_at')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false });
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -18,10 +24,10 @@ export default function PublishedPage() {
         </Link>
       </div>
 
-      {published.length > 0 ? (
+      {published && published.length > 0 ? (
         <div className="bg-white rounded-lg border border-parchment overflow-hidden shadow-sm">
           <ul className="divide-y divide-parchment">
-            {published.map(writing => (
+            {published.map((writing: any) => (
               <li key={writing.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-zinc-50 transition-colors">
                 <div className="mb-4 md:mb-0">
                   <h3 className="text-2xl font-serif text-forest font-semibold mb-2">{writing.title}</h3>
@@ -39,9 +45,7 @@ export default function PublishedPage() {
                   >
                     Edit
                   </Link>
-                  <button className="px-4 py-2 border border-yellow-500 text-yellow-700 rounded hover:bg-yellow-50 transition-colors">
-                    Unpublish
-                  </button>
+                  <UnpublishButton id={writing.id} />
                 </div>
               </li>
             ))}

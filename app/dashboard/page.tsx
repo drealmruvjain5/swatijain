@@ -1,9 +1,18 @@
 import Link from 'next/link';
-import { mockDrafts, mockWritings } from '@/lib/mockData';
+import { createClient } from '@/lib/supabase/server';
 
-export default function DashboardOverview() {
-  const publishedCount = mockWritings.filter(w => w.status === 'published').length;
-  const draftCount = mockDrafts.length;
+export default async function DashboardOverview() {
+  const supabase = await createClient();
+
+  const { count: publishedCount } = await supabase
+    .from('writings')
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'published');
+
+  const { count: draftCount } = await supabase
+    .from('writings')
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'draft');
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -12,14 +21,14 @@ export default function DashboardOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         <div className="bg-parchment p-8 rounded-lg border border-[#eae2d3]">
           <h2 className="text-xl font-serif text-charcoal mb-2">Published Writings</h2>
-          <p className="text-5xl font-bold text-forest mb-4">{publishedCount}</p>
+          <p className="text-5xl font-bold text-forest mb-4">{publishedCount || 0}</p>
           <Link href="/dashboard/published" className="text-forest font-medium hover:underline">
             Manage Published &rarr;
           </Link>
         </div>
         <div className="bg-white p-8 rounded-lg border border-parchment shadow-sm">
           <h2 className="text-xl font-serif text-charcoal mb-2">Current Drafts</h2>
-          <p className="text-5xl font-bold text-forest mb-4">{draftCount}</p>
+          <p className="text-5xl font-bold text-forest mb-4">{draftCount || 0}</p>
           <Link href="/dashboard/drafts" className="text-forest font-medium hover:underline">
             Manage Drafts &rarr;
           </Link>

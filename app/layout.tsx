@@ -31,8 +31,15 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: 'Personal Literary Website',
-  description: 'A collection of poems, blogs, essays, and stories.',
+  title: 'Swati Jain | Personal Literary Website',
+  description: 'A quiet corner of the internet for poems, blogs, essays, and stories traversing the gentle rhythms of life. Explore the writings of Swati Jain.',
+  keywords: ['Swati Jain', 'Literature', 'Poetry', 'Hindi Poems', 'Essays', 'Stories'],
+  authors: [{ name: 'Swati Jain' }],
+  openGraph: {
+    title: 'Swati Jain | Personal Literary Website',
+    description: 'A quiet corner of the internet for poems, blogs, essays, and stories.',
+    type: 'website',
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

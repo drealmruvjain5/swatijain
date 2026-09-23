@@ -1,11 +1,19 @@
 import WritingCard from '@/components/ui/WritingCard';
 import EmptyState from '@/components/ui/EmptyState';
-import { getPublishedWritings } from '@/lib/mockData';
+import { createClient } from '@/lib/supabase/server';
+import { getImageUrl } from '@/lib/utils';
 
-export default function Home() {
-  const writings = getPublishedWritings();
-  const featured = writings.slice(0, 2);
-  const recent = writings.slice(2, 6);
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: writings } = await supabase
+    .from('writings')
+    .select('*')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(6);
+
+  const featured = writings ? writings.slice(0, 2) : [];
+  const recent = writings ? writings.slice(2, 6) : [];
 
   return (
     <div className="w-full flex-1 flex flex-col">
@@ -56,15 +64,15 @@ export default function Home() {
           
           {featured.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {featured.map((w) => (
+              {featured.map((w: any) => (
                 <WritingCard 
                   key={w.id}
                   title={w.title} 
                   slug={w.slug} 
                   category={w.category} 
                   date={w.published_at} 
-                  coverImage={w.cover_image}
-                  snippet={w.content.substring(0, 150) + '...'} 
+                  coverImage={getImageUrl(w.cover_image)}
+                  snippet={w.content ? (w.content.substring(0, 150) + '...') : ''} 
                 />
               ))}
             </div>
@@ -78,14 +86,14 @@ export default function Home() {
           <h2 className="text-3xl font-serif text-forest mb-10">Recent Additions</h2>
           {recent.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recent.map((w) => (
+              {recent.map((w: any) => (
                 <WritingCard 
                   key={w.id}
                   title={w.title} 
                   slug={w.slug} 
                   category={w.category} 
                   date={w.published_at} 
-                  coverImage={w.cover_image}
+                  coverImage={getImageUrl(w.cover_image)}
                 />
               ))}
             </div>
