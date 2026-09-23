@@ -2,16 +2,29 @@ import WritingCard from '@/components/ui/WritingCard';
 import EmptyState from '@/components/ui/EmptyState';
 import { createClient } from '@/lib/supabase/server';
 import { getImageUrl } from '@/lib/utils';
+import Link from 'next/link';
+import Image from 'next/image';
+
+interface Writing {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  published_at: string;
+  cover_image: string;
+  content: string;
+}
 
 export default async function Home() {
   const supabase = await createClient();
-  const { data: writings } = await supabase
+  const { data } = await supabase
     .from('writings')
     .select('*')
     .eq('status', 'published')
     .order('published_at', { ascending: false })
     .limit(6);
 
+  const writings = data as Writing[] | null;
   const featured = writings ? writings.slice(0, 2) : [];
   const recent = writings ? writings.slice(2, 6) : [];
 
@@ -19,11 +32,13 @@ export default async function Home() {
     <div className="w-full flex-1 flex flex-col">
       {/* Hero Section with Author Photo */}
       <section className="max-w-5xl mx-auto px-6 w-full min-h-[calc(100vh-80px)] flex flex-col md:flex-row justify-center items-center gap-12 border-b border-parchment">
-        <div className="w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden shrink-0 border-4 border-parchment shadow-md">
-          <img 
+        <div className="w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden shrink-0 border-4 border-parchment shadow-md relative">
+          <Image 
             src="/swati-jain.jpeg" 
             alt="Swati Jain" 
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority
           />
         </div>
         <div className="text-center md:text-left flex-1 max-w-2xl">
@@ -59,12 +74,12 @@ export default async function Home() {
         <section className="mb-20">
           <div className="flex items-center justify-between mb-10">
             <h2 className="text-3xl font-serif text-forest">Featured Works</h2>
-            <a href="/writings" className="text-forest hover:underline font-medium">View All &rarr;</a>
+            <Link href="/writings" className="text-forest hover:underline font-medium">View All &rarr;</Link>
           </div>
           
           {featured.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {featured.map((w: any) => (
+              {featured.map((w: Writing) => (
                 <WritingCard 
                   key={w.id}
                   title={w.title} 
@@ -86,7 +101,7 @@ export default async function Home() {
           <h2 className="text-3xl font-serif text-forest mb-10">Recent Additions</h2>
           {recent.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recent.map((w: any) => (
+              {recent.map((w: Writing) => (
                 <WritingCard 
                   key={w.id}
                   title={w.title} 

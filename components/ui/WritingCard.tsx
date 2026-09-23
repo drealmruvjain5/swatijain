@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Badge from './Badge';
 
 interface WritingCardProps {
@@ -14,11 +15,13 @@ export default function WritingCard({ title, slug, category, date, snippet, cove
   return (
     <article className="group flex flex-col rounded-lg bg-parchment hover:bg-[#eae2d3] transition-colors duration-300 overflow-hidden h-full">
       {coverImage && (
-        <Link href={`/writings/${slug}`} className="block overflow-hidden h-48 w-full shrink-0 focus:outline-none" tabIndex={-1} aria-hidden="true">
-          <img 
+        <Link href={`/writings/${slug}`} className="block relative overflow-hidden h-48 w-full shrink-0 focus:outline-none" tabIndex={-1} aria-hidden="true">
+          <Image 
             src={coverImage} 
             alt="" 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </Link>
       )}

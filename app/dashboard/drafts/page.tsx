@@ -4,13 +4,22 @@ import Badge from '@/components/ui/Badge';
 import { createClient } from '@/lib/supabase/server';
 import { DeleteButton } from '@/components/ui/DashboardActionButtons';
 
+interface Draft {
+  id: string;
+  title: string;
+  category: string;
+  updated_at: string;
+}
+
 export default async function DraftsPage() {
   const supabase = await createClient();
-  const { data: drafts } = await supabase
+  const { data } = await supabase
     .from('writings')
     .select('id, title, category, updated_at')
     .eq('status', 'draft')
     .order('updated_at', { ascending: false });
+    
+  const drafts = data as Draft[] | null;
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -27,7 +36,7 @@ export default async function DraftsPage() {
       {drafts && drafts.length > 0 ? (
         <div className="bg-white rounded-lg border border-parchment overflow-hidden shadow-sm">
           <ul className="divide-y divide-parchment">
-            {drafts.map((draft: any) => (
+            {drafts.map((draft: Draft) => (
               <li key={draft.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-zinc-50 transition-colors">
                 <div className="mb-4 md:mb-0">
                   <h3 className="text-2xl font-serif text-forest font-semibold mb-2">{draft.title || 'Untitled'}</h3>

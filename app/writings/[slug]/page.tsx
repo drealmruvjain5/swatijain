@@ -4,6 +4,7 @@ import BackButton from '@/components/ui/BackButton';
 import { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { getImageUrl } from '@/lib/utils';
+import Image from 'next/image';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -105,11 +106,13 @@ export default async function WritingPage({ params }: Props) {
       </header>
 
       {coverImageUrl && (
-        <div className="mb-12">
-          <img 
+        <div className="mb-12 relative w-full h-[400px]">
+          <Image 
             src={coverImageUrl} 
             alt={writing.title} 
-            className="w-full h-[400px] object-cover rounded-lg shadow-sm" 
+            fill
+            className="object-cover rounded-lg shadow-sm" 
+            priority
           />
         </div>
       )}

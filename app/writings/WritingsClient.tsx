@@ -4,7 +4,18 @@ import { useState, useMemo } from 'react';
 import WritingCard from '@/components/ui/WritingCard';
 import EmptyState from '@/components/ui/EmptyState';
 
-export default function WritingsClient({ writings }: { writings: any[] }) {
+export interface Writing {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  published_at: string;
+  created_at: string;
+  coverImageUrl?: string;
+  content?: string;
+}
+
+export default function WritingsClient({ writings }: { writings: Writing[] }) {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [yearFilter, setYearFilter] = useState<string>('all');

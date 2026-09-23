@@ -4,13 +4,22 @@ import Badge from '@/components/ui/Badge';
 import { createClient } from '@/lib/supabase/server';
 import { UnpublishButton } from '@/components/ui/DashboardActionButtons';
 
+interface Writing {
+  id: string;
+  title: string;
+  category: string;
+  published_at: string;
+}
+
 export default async function PublishedPage() {
   const supabase = await createClient();
-  const { data: published } = await supabase
+  const { data } = await supabase
     .from('writings')
     .select('id, title, category, published_at')
     .eq('status', 'published')
     .order('published_at', { ascending: false });
+    
+  const published = data as Writing[] | null;
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -27,7 +36,7 @@ export default async function PublishedPage() {
       {published && published.length > 0 ? (
         <div className="bg-white rounded-lg border border-parchment overflow-hidden shadow-sm">
           <ul className="divide-y divide-parchment">
-            {published.map((writing: any) => (
+            {published.map((writing: Writing) => (
               <li key={writing.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-zinc-50 transition-colors">
                 <div className="mb-4 md:mb-0">
                   <h3 className="text-2xl font-serif text-forest font-semibold mb-2">{writing.title}</h3>

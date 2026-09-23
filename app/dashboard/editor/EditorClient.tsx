@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { saveDraft, publishWriting } from '@/app/dashboard/actions';
 import { createClient } from '@/lib/supabase/client';
 
-export default function EditorClient({ initialData }: { initialData: any }) {
+export default function EditorClient({ initialData }: { initialData: Record<string, string> | null }) {
   const router = useRouter();
 
   // If we have initialData, we start with its ID. Otherwise null.
@@ -20,14 +21,9 @@ export default function EditorClient({ initialData }: { initialData: any }) {
   const [isUploading, setIsUploading] = useState(false);
   
   // To track dirty state effectively, we keep the last saved version
-  const [lastSavedState, setLastSavedState] = useState({ title, category, content, cover_image: coverImage });
-  const [isDirty, setIsDirty] = useState(false);
-
-  useEffect(() => {
-    const currentState = { title, category, content, cover_image: coverImage };
-    setIsDirty(JSON.stringify(currentState) !== JSON.stringify(lastSavedState));
-    if (isDirty) setSaveStatus('idle');
-  }, [title, category, content, coverImage, lastSavedState]);
+  const [lastSavedState, setLastSavedState] = useState({ title: initialData?.title || '', category: initialData?.category || 'poem', content: initialData?.content || '', cover_image: initialData?.cover_image || '' });
+  
+  const isDirty = JSON.stringify({ title, category, content, cover_image: coverImage }) !== JSON.stringify(lastSavedState);
 
   // Leave page warning
   useEffect(() => {
@@ -61,7 +57,6 @@ export default function EditorClient({ initialData }: { initialData: any }) {
     } else {
       setSaveStatus('saved');
       setLastSavedState({ title, category, content, cover_image: coverImage });
-      setIsDirty(false);
       
       if (!id && result.id) {
         setId(result.id);
@@ -136,7 +131,6 @@ export default function EditorClient({ initialData }: { initialData: any }) {
       setId(result.id);
       window.history.replaceState(null, '', `/dashboard/editor?id=${result.id}`);
       setLastSavedState({ title: title || 'Untitled', category, content, cover_image: '' });
-      setIsDirty(false);
       setSaveStatus('saved');
     }
 
@@ -199,8 +193,8 @@ export default function EditorClient({ initialData }: { initialData: any }) {
       {isPreview ? (
         <div className="flex-1 bg-white p-8 md:p-12 rounded border border-parchment overflow-y-auto">
            {coverImageUrl && (
-             <div className="mb-8">
-               <img src={coverImageUrl} alt="Cover Preview" className="w-full h-[400px] object-cover rounded-lg shadow-sm" />
+             <div className="mb-8 relative w-full h-[400px]">
+               <Image src={coverImageUrl} alt="Cover Preview" fill className="object-cover rounded-lg shadow-sm" priority />
              </div>
            )}
            <h1 className="text-4xl font-serif text-forest mb-6 text-center">{title || 'Untitled'}</h1>

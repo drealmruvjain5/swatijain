@@ -30,7 +30,7 @@ export async function saveDraft(data: {
     return { error: 'Unauthorized' };
   }
 
-  const payload: any = {
+  const payload: Record<string, string> = {
     title: data.title,
     category: data.category,
     content: data.content,
