@@ -8,7 +8,7 @@ export default function Header() {
           href="/" 
           className="text-2xl font-serif text-forest font-semibold hover:opacity-80 transition-opacity"
         >
-          Author Name
+          Swati Jain
         </Link>
         <nav>
           <ul className="flex items-center gap-6 text-charcoal font-medium">

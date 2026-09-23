@@ -26,7 +26,7 @@ export default async function Home() {
 
   const writings = data as Writing[] | null;
   const featured = writings ? writings.slice(0, 2) : [];
-  const recent = writings ? writings.slice(2, 6) : [];
+  const recent = writings ? writings.filter(w => !featured.find(f => f.id === w.id)).slice(0, 4) : [];
 
   return (
     <div className="w-full flex-1 flex flex-col">

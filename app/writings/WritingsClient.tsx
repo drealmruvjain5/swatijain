@@ -87,7 +87,7 @@ export default function WritingsClient({ writings }: { writings: Writing[] }) {
           aria-label="Search writings"
           type="text" 
           placeholder="Search titles or content..." 
-          className="flex-1 min-w-[250px] px-4 py-2 bg-white border border-parchment rounded-md focus:outline-none focus:ring-2 focus:ring-forest text-charcoal font-sans"
+          className="flex-1 min-w-[250px] px-4 py-2.5 bg-white border border-parchment rounded-lg focus:outline-none focus:ring-2 focus:ring-forest focus:border-forest text-charcoal font-sans transition-shadow"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -96,49 +96,64 @@ export default function WritingsClient({ writings }: { writings: Writing[] }) {
         />
         
         {/* Category */}
-        <select 
-          aria-label="Filter by category"
-          className="px-4 py-2 bg-white border border-parchment rounded-md focus:outline-none focus:ring-2 focus:ring-forest text-charcoal capitalize"
-          value={categoryFilter}
-          onChange={(e) => {
-            setCategoryFilter(e.target.value);
-            setVisibleCount(12);
-          }}
-        >
-          {categories.map(c => (
-            <option key={c} value={c}>{c === 'all' ? 'All Categories' : c}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select 
+            aria-label="Filter by category"
+            className="appearance-none w-full md:w-auto pl-4 pr-10 py-2.5 bg-white border border-parchment rounded-lg focus:outline-none focus:ring-2 focus:ring-forest focus:border-forest text-charcoal capitalize cursor-pointer transition-shadow"
+            value={categoryFilter}
+            onChange={(e) => {
+              setCategoryFilter(e.target.value);
+              setVisibleCount(12);
+            }}
+          >
+            {categories.map(c => (
+              <option key={c} value={c}>{c === 'all' ? 'All Categories' : c}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-charcoal-light">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+        </div>
 
         {/* Year */}
-        <select 
-          aria-label="Filter by year"
-          className="px-4 py-2 bg-white border border-parchment rounded-md focus:outline-none focus:ring-2 focus:ring-forest text-charcoal"
-          value={yearFilter}
-          onChange={(e) => {
-            setYearFilter(e.target.value);
-            setVisibleCount(12);
-          }}
-        >
-          <option value="all">All Years</option>
-          {years.filter(y => y !== 'all').map(y => (
-            <option key={y} value={y}>{y}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select 
+            aria-label="Filter by year"
+            className="appearance-none w-full md:w-auto pl-4 pr-10 py-2.5 bg-white border border-parchment rounded-lg focus:outline-none focus:ring-2 focus:ring-forest focus:border-forest text-charcoal cursor-pointer transition-shadow"
+            value={yearFilter}
+            onChange={(e) => {
+              setYearFilter(e.target.value);
+              setVisibleCount(12);
+            }}
+          >
+            <option value="all">All Years</option>
+            {years.filter(y => y !== 'all').map(y => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-charcoal-light">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+        </div>
 
         {/* Sort */}
-        <select 
-          aria-label="Sort by date"
-          className="px-4 py-2 bg-white border border-parchment rounded-md focus:outline-none focus:ring-2 focus:ring-forest text-charcoal"
-          value={sortOrder}
-          onChange={(e) => {
-            setSortOrder(e.target.value as 'newest' | 'oldest');
-            setVisibleCount(12);
-          }}
-        >
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-        </select>
+        <div className="relative">
+          <select 
+            aria-label="Sort by date"
+            className="appearance-none w-full md:w-auto pl-4 pr-10 py-2.5 bg-white border border-parchment rounded-lg focus:outline-none focus:ring-2 focus:ring-forest focus:border-forest text-charcoal cursor-pointer transition-shadow"
+            value={sortOrder}
+            onChange={(e) => {
+              setSortOrder(e.target.value as 'newest' | 'oldest');
+              setVisibleCount(12);
+            }}
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-charcoal-light">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+        </div>
       </div>
 
       {/* Grid */}

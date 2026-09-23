@@ -5,7 +5,7 @@ export default function AboutPage() {
     <div className="max-w-3xl mx-auto px-6 py-16 w-full flex-1">
       <header className="mb-12 text-center">
         <h1 className="text-4xl font-serif text-forest mb-6">About the Author</h1>
-        <div className="w-32 h-32 rounded-full mx-auto overflow-hidden border-4 border-parchment shadow-sm relative">
+        <div className="w-48 h-48 md:w-64 md:h-64 rounded-full mx-auto overflow-hidden border-4 border-parchment shadow-sm relative">
           <Image src="/swati-jain.jpeg" alt="Swati Jain" fill className="object-cover" priority />
         </div>
       </header>
