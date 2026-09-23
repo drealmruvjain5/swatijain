@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ivory: #FDFBF7;
+  --color-parchment: #F4EFE6;
+  --color-forest: #2B3A2C;
+  --color-forest-dark: #1f2a20;
+  --color-charcoal: #333333;
+  --color-charcoal-light: #555555;
+  
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-lora), ui-serif, Georgia, serif;
+  --font-hindi-serif: var(--font-noto-serif-devanagari), serif;
+  --font-hindi-sans: var(--font-noto-sans-devanagari), sans-serif;
+
+  --color-background: var(--color-ivory);
+  --color-foreground: var(--color-charcoal);
+
+  --animate-marquee: marquee 25s linear infinite;
+
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans antialiased selection:bg-forest selection:text-ivory;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-forest tracking-tight;
+  }
+  
+  a {
+    @apply transition-colors duration-200 ease-in-out;
+  }
+  
+  /* Accessible focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-forest ring-offset-2 ring-offset-ivory rounded-sm;
+  }
+}
