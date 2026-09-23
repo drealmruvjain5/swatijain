@@ -159,7 +159,7 @@ export default function EditorClient({ initialData }: { initialData: any }) {
   const coverImageUrl = coverImage 
     ? (coverImage.startsWith('http') 
         ? coverImage 
-        : createClient().storage.from('images').getPublicUrl(coverImage).data.publicUrl)
+        : `/api/images/${coverImage}`)
     : '';
 
   return (

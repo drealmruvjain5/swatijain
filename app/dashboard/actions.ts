@@ -50,7 +50,7 @@ export async function saveDraft(data: {
 
     if (error) return { error: error.message };
     
-    revalidatePath('/dashboard');
+    revalidatePath('/', 'layout');
     return { id: insertedData.id, success: true };
   } else {
     // Existing draft
@@ -61,7 +61,7 @@ export async function saveDraft(data: {
 
     if (error) return { error: error.message };
     
-    revalidatePath('/dashboard');
+    revalidatePath('/', 'layout');
     return { id: data.id, success: true };
   }
 }
@@ -80,8 +80,7 @@ export async function publishWriting(id: string) {
 
   if (error) return { error: error.message };
   
-  revalidatePath('/dashboard');
-  revalidatePath('/writings');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
 
@@ -99,8 +98,7 @@ export async function unpublishWriting(id: string) {
 
   if (error) return { error: error.message };
   
-  revalidatePath('/dashboard');
-  revalidatePath('/writings');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
 
@@ -108,23 +106,14 @@ export async function unpublishWriting(id: string) {
 export async function deleteWriting(id: string) {
   const supabase = await createClient();
   
-  // First, fetch to see if there's a cover image to delete
   const { data: writing } = await supabase
     .from('writings')
     .select('cover_image')
     .eq('id', id)
     .single();
 
-  if (writing?.cover_image) {
-    // Extract file path from URL or if it's stored directly as path
-    // If it's a URL, we need to parse it. If we store the path, we can delete directly.
-    // Assuming we store the public URL, extracting path is tricky unless we only store the path.
-    // For now, let's assume we store the path. If it starts with 'http', it's tricky.
-    // Wait, the prompt requested: "Store the storage path in the database rather than relying only on a hardcoded public URL."
-    const path = writing.cover_image;
-    if (!path.startsWith('http')) {
-      await supabase.storage.from('images').remove([path]);
-    }
+  if (writing?.cover_image && !writing.cover_image.startsWith('http')) {
+    await supabase.storage.from('images').remove([writing.cover_image]);
   }
 
   const { error } = await supabase
@@ -134,6 +123,6 @@ export async function deleteWriting(id: string) {
 
   if (error) return { error: error.message };
   
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
