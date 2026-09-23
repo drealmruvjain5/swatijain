@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient();
   const { data: writing } = await supabase
     .from('writings')
-    .select('title')
+    .select('title, content, cover_image, category')
     .eq('slug', slug)
     .eq('status', 'published')
     .single();
@@ -23,8 +23,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Not Found' };
   }
   
+  const snippet = writing.content ? (writing.content.substring(0, 150).replace(/\n/g, ' ') + '...') : '';
+  const coverUrl = getImageUrl(writing.cover_image);
+
   return {
-    title: `${writing.title} | Personal Literary Website`,
+    title: `${writing.title} | Swati Jain`,
+    description: snippet || `Read this ${writing.category} by Swati Jain.`,
+    alternates: {
+      canonical: `/writings/${slug}`,
+    },
+    openGraph: {
+      title: writing.title,
+      description: snippet,
+      type: 'article',
+      url: `/writings/${slug}`,
+      ...(coverUrl && { images: [coverUrl] }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: writing.title,
+      description: snippet,
+      ...(coverUrl && { images: [coverUrl] }),
+    }
   };
 }
 

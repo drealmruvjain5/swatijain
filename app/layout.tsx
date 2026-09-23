@@ -30,7 +30,10 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
   display: 'swap',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'Swati Jain | Personal Literary Website',
   description: 'A quiet corner of the internet for poems, blogs, essays, and stories traversing the gentle rhythms of life. Explore the writings of Swati Jain.',
   keywords: ['Swati Jain', 'Literature', 'Poetry', 'Hindi Poems', 'Essays', 'Stories'],
