@@ -73,6 +73,7 @@ export default function WritingsClient({ writings }: { writings: any[] }) {
       <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-10 bg-ivory p-4 rounded-lg border border-parchment shadow-sm">
         {/* Search */}
         <input 
+          aria-label="Search writings"
           type="text" 
           placeholder="Search titles or content..." 
           className="flex-1 min-w-[250px] px-4 py-2 bg-white border border-parchment rounded-md focus:outline-none focus:ring-2 focus:ring-forest text-charcoal font-sans"
@@ -85,6 +86,7 @@ export default function WritingsClient({ writings }: { writings: any[] }) {
         
         {/* Category */}
         <select 
+          aria-label="Filter by category"
           className="px-4 py-2 bg-white border border-parchment rounded-md focus:outline-none focus:ring-2 focus:ring-forest text-charcoal capitalize"
           value={categoryFilter}
           onChange={(e) => {
@@ -99,6 +101,7 @@ export default function WritingsClient({ writings }: { writings: any[] }) {
 
         {/* Year */}
         <select 
+          aria-label="Filter by year"
           className="px-4 py-2 bg-white border border-parchment rounded-md focus:outline-none focus:ring-2 focus:ring-forest text-charcoal"
           value={yearFilter}
           onChange={(e) => {
@@ -114,6 +117,7 @@ export default function WritingsClient({ writings }: { writings: any[] }) {
 
         {/* Sort */}
         <select 
+          aria-label="Sort by date"
           className="px-4 py-2 bg-white border border-parchment rounded-md focus:outline-none focus:ring-2 focus:ring-forest text-charcoal"
           value={sortOrder}
           onChange={(e) => {

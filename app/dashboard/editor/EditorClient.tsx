@@ -267,6 +267,7 @@ export default function EditorClient({ initialData }: { initialData: any }) {
           <hr className="border-parchment" />
 
           <textarea 
+            aria-label="Content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Write your thoughts here. Line breaks and paragraphs will be preserved exactly as you type them..."

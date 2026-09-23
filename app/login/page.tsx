@@ -26,7 +26,7 @@ export default function LoginPage() {
         <h1 className="text-3xl font-serif text-forest mb-6 text-center">Author Login</h1>
         
         {state?.error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r text-sm font-medium">
+          <div aria-live="polite" className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r text-sm font-medium">
             {state.error}
           </div>
         )}

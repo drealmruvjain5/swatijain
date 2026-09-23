@@ -14,10 +14,10 @@ export default function WritingCard({ title, slug, category, date, snippet, cove
   return (
     <article className="group flex flex-col rounded-lg bg-parchment hover:bg-[#eae2d3] transition-colors duration-300 overflow-hidden h-full">
       {coverImage && (
-        <Link href={`/writings/${slug}`} className="block overflow-hidden h-48 w-full shrink-0">
+        <Link href={`/writings/${slug}`} className="block overflow-hidden h-48 w-full shrink-0 focus:outline-none" tabIndex={-1} aria-hidden="true">
           <img 
             src={coverImage} 
-            alt={title} 
+            alt="" 
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </Link>
@@ -34,7 +34,7 @@ export default function WritingCard({ title, slug, category, date, snippet, cove
           </time>
         </div>
         
-        <Link href={`/writings/${slug}`} className="focus:outline-none flex-1 flex flex-col">
+        <Link href={`/writings/${slug}`} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 rounded flex-1 flex flex-col">
           <h3 className="text-2xl font-serif font-bold text-forest group-hover:text-forest-dark mb-3 line-clamp-2">
             {title}
           </h3>
